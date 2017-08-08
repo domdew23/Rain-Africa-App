@@ -63,6 +63,7 @@ class CollectionsViewController: UIViewController {
     fileprivate func fetchCollections(after cursor: String? = nil) {
         Client.shared.fetchCollections(after: cursor) { collections in
             if let collections = collections {
+                print(collections.items.description)
                 self.collections = collections
                 self.tableView.reloadData()
             }
@@ -141,9 +142,7 @@ extension CollectionsViewController: StorefrontTableViewDelegate {
             
             Client.shared.fetchCollections(after: lastCollection.cursor) { collections in
                 if let collections = collections {
-                    
                     self.collections.appendPage(from: collections)
-                    
                     self.tableView.reloadData()
                     self.tableView.completePaging()
                 }
@@ -211,7 +210,20 @@ extension CollectionsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return self.collections.items[section].description
+        let tmp = self.collections.items[section].description
+        let desc = tmp.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression, range: nil)
+        
+        let delimiter = "\n"
+        var token = desc.components(separatedBy: delimiter)
+        token.remove(at: 0)
+        
+        let final_desc = token.joined()
+        
+        if !final_desc.isEmpty{
+            return final_desc
+        }
+        
+        return nil
     }
     
     // ----------------------------------

@@ -36,7 +36,7 @@ final class ClientQuery {
     static func queryForCollections(limit: Int, after cursor: String? = nil, productLimit: Int = 25, productCursor: String? = nil) -> Storefront.QueryRootQuery {
         return Storefront.buildQuery { $0
             .shop { $0
-                .collections(first: Int32(limit), after: cursor) { $0
+                .collections(first: 14, after: cursor) { $0
                     .pageInfo { $0
                         .hasNextPage()
                     }
